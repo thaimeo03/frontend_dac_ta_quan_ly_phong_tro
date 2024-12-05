@@ -26,6 +26,20 @@ export default function RootLayout({
     return (
         <html lang='en'>
             <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+                <div className='area'>
+                    <ul className='circles'>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                    </ul>
+                </div>
                 <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
             </body>
         </html>

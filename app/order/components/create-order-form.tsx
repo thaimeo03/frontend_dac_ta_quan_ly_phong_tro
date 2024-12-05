@@ -147,7 +147,7 @@ export default function CreateOrderForm() {
                 <div>
                     <h3 className='text-lg font-medium mb-2'>Phòng tháng còn trống</h3>
                     <Card>
-                        <CardContent className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 p-4'>
+                        <CardContent className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 p-4 min-h-36'>
                             {(availableRooms || []).map((room) => {
                                 const isSelected = selectedRooms.some(
                                     (r) => r.MaPhong === room.MaPhong && r.Nam === room.Nam && r.Thang === room.Thang
