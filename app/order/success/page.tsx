@@ -18,13 +18,13 @@ export default function OrderSuccessPage() {
     })
 
     if (!orderDetails) {
-        return <div className='flex justify-center items-center h-screen'>Order not found</div>
+        return <div className='flex justify-center items-center h-screen'>Không tìm thấy đơn</div>
     }
 
     return (
         <div className='container mx-auto p-4 h-screen grid place-items-center'>
             <div>
-                <h1 className='text-2xl font-bold mb-6 text-center'>Order Successful</h1>
+                <h1 className='text-2xl font-bold mb-6 text-center'>Đặt phòng thành công</h1>
                 <OrderSuccessCard orderDetails={orderDetails} />
                 <Link href='/' className='text-center block underline mt-2'>
                     Quay về
