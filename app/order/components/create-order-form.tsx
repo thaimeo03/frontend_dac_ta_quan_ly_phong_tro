@@ -7,9 +7,13 @@ import * as z from 'zod'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { CreateOrderData, PhongThang } from '../types/order'
+import { CreateOrderData, PhongThang, PhongThangKey } from '../types/order'
 import { toast } from '@/hooks/use-toast'
 import { Card, CardContent } from '@/components/ui/card'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { getAllAvailableMonthlyRooms } from '@/apis/monthy-room.api'
+import { createOrder } from '@/apis/oder.api'
+import { useRouter } from 'next/navigation'
 
 const formSchema = z.object({
     soDienThoaiLienLac: z.string().regex(/^\d{10}$/, 'Phone number must be 10 digits'),
@@ -25,12 +29,27 @@ const formSchema = z.object({
         .min(1, 'At least one room must be selected')
 })
 
-interface CreateOrderFormProps {
-    availablePhongThang: PhongThang[]
-}
-
-export default function CreateOrderForm({ availablePhongThang }: CreateOrderFormProps) {
+export default function CreateOrderForm() {
     // Hooks
+    const router = useRouter()
+    const { data: availableRooms } = useQuery({
+        queryKey: ['available-monthly-rooms'],
+        queryFn: getAllAvailableMonthlyRooms
+    })
+
+    const createOrderMutation = useMutation({
+        mutationFn: (body: CreateOrderData) => createOrder(body),
+        onSuccess: (data) => {
+            router.push(`/order/success?orderId=${data.MaDon}`)
+        },
+        onError: () => {
+            toast({
+                title: 'Error',
+                description: 'Failed to create order'
+            })
+        }
+    })
+
     const [isLoading, setIsLoading] = useState(false)
     const [selectedRooms, setSelectedRooms] = useState<PhongThang[]>([])
 
@@ -46,21 +65,28 @@ export default function CreateOrderForm({ availablePhongThang }: CreateOrderForm
     const toggleRoomSelection = (room: PhongThang) => {
         setSelectedRooms((prev) => {
             const isSelected = prev.some(
-                (r) => r.maPhong === room.maPhong && r.nam === room.nam && r.thang === room.thang
+                (r) => r.MaPhong === room.MaPhong && r.Nam === room.Nam && r.Thang === room.Thang
             )
             if (isSelected) {
-                return prev.filter((r) => !(r.maPhong === room.maPhong && r.nam === room.nam && r.thang === room.thang))
+                return prev.filter((r) => !(r.MaPhong === room.MaPhong && r.Nam === room.Nam && r.Thang === room.Thang))
             } else {
                 return [...prev, room]
             }
         })
     }
 
+    // console.log(form.watch('phongThangKeys'))
+
     useEffect(() => {
-        form.setValue('phongThangKeys', selectedRooms)
+        const phongThangKeys: PhongThangKey[] = selectedRooms.map((room) => ({
+            maPhong: room.MaPhong,
+            nam: room.Nam,
+            thang: room.Thang
+        }))
+        form.setValue('phongThangKeys', phongThangKeys)
     }, [form, selectedRooms])
 
-    const onSubmit = form.handleSubmit((values) => {
+    async function onSubmit(values: CreateOrderData) {
         if (selectedRooms.length === 0) {
             toast({
                 title: 'No rooms selected',
@@ -71,8 +97,10 @@ export default function CreateOrderForm({ availablePhongThang }: CreateOrderForm
         }
 
         setIsLoading(true)
-        // Here you would typically send a POST request to your API
+
         console.log(values)
+        createOrderMutation.mutate(values)
+
         setIsLoading(false)
         form.reset()
         setSelectedRooms([])
@@ -80,17 +108,17 @@ export default function CreateOrderForm({ availablePhongThang }: CreateOrderForm
             title: 'Order created',
             description: 'Your order has been successfully created.'
         })
-    })
+    }
 
     return (
         <Form {...form}>
-            <form onSubmit={onSubmit} className='space-y-6'>
+            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
                 <FormField
                     control={form.control}
                     name='soDienThoaiLienLac'
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Contact Phone Number</FormLabel>
+                            <FormLabel>Điện thoại liên lạc</FormLabel>
                             <FormControl>
                                 <Input placeholder='Enter phone number' {...field} />
                             </FormControl>
@@ -103,11 +131,12 @@ export default function CreateOrderForm({ availablePhongThang }: CreateOrderForm
                     name='soLuongNguoiO'
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Number of Occupants</FormLabel>
+                            <FormLabel>Số lượng người ở</FormLabel>
                             <FormControl>
                                 <Input
                                     type='number'
                                     {...field}
+                                    value={!field.value ? '' : field.value}
                                     onChange={(e) => field.onChange(parseInt(e.target.value))}
                                 />
                             </FormControl>
@@ -116,24 +145,24 @@ export default function CreateOrderForm({ availablePhongThang }: CreateOrderForm
                     )}
                 />
                 <div>
-                    <h3 className='text-lg font-medium mb-2'>Available Rooms</h3>
+                    <h3 className='text-lg font-medium mb-2'>Phòng tháng còn trống</h3>
                     <Card>
                         <CardContent className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 p-4'>
-                            {availablePhongThang.map((room) => {
+                            {(availableRooms || []).map((room) => {
                                 const isSelected = selectedRooms.some(
-                                    (r) => r.maPhong === room.maPhong && r.nam === room.nam && r.thang === room.thang
+                                    (r) => r.MaPhong === room.MaPhong && r.Nam === room.Nam && r.Thang === room.Thang
                                 )
                                 return (
                                     <Button
-                                        key={`${room.maPhong}-${room.nam}-${room.thang}`}
+                                        key={`${room.MaPhong}-${room.Nam}-${room.Thang}`}
                                         type='button'
                                         variant={isSelected ? 'default' : 'outline'}
                                         className={`w-full ${isSelected ? 'bg-primary text-primary-foreground' : ''}`}
                                         onClick={() => toggleRoomSelection(room)}
                                     >
-                                        Room {room.maPhong}
+                                        Phòng {room.MaPhong}
                                         <br />
-                                        {room.thang}/{room.nam}
+                                        {room.Thang}/{room.Nam}
                                     </Button>
                                 )
                             })}
@@ -141,7 +170,7 @@ export default function CreateOrderForm({ availablePhongThang }: CreateOrderForm
                     </Card>
                 </div>
                 <Button type='submit' disabled={isLoading || selectedRooms.length === 0}>
-                    {isLoading ? 'Creating Order...' : 'Create Order'}
+                    {isLoading ? 'Creating Order...' : 'Tạo đơn'}
                 </Button>
             </form>
         </Form>

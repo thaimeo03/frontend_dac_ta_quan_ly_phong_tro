@@ -80,9 +80,9 @@ export default function CreateRoomForm() {
                     name='tenPhong'
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Room Name</FormLabel>
+                            <FormLabel>Tên phòng</FormLabel>
                             <FormControl>
-                                <Input placeholder='Enter room name' {...field} />
+                                <Input placeholder='Nhập tên phòng' {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -93,7 +93,7 @@ export default function CreateRoomForm() {
                     name='soNguoiToiDa'
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Maximum Occupancy</FormLabel>
+                            <FormLabel>Số người tối đa</FormLabel>
                             <FormControl>
                                 <Input
                                     type='text'
@@ -111,7 +111,7 @@ export default function CreateRoomForm() {
                     name='dienTich'
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Area (m²)</FormLabel>
+                            <FormLabel>Diện tích (m²)</FormLabel>
                             <FormControl>
                                 <Input
                                     type='number'
@@ -129,9 +129,9 @@ export default function CreateRoomForm() {
                     name='moTa'
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Description</FormLabel>
+                            <FormLabel>Mô tả</FormLabel>
                             <FormControl>
-                                <Textarea placeholder='Enter room description' {...field} />
+                                <Textarea placeholder='Nhập mô tả phòng' {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -142,7 +142,7 @@ export default function CreateRoomForm() {
                     name='soTang'
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Floor Number</FormLabel>
+                            <FormLabel>Số tầng</FormLabel>
                             <FormControl>
                                 <Input
                                     type='number'
@@ -160,11 +160,11 @@ export default function CreateRoomForm() {
                     name='maLoaiPhong'
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Room Type</FormLabel>
+                            <FormLabel>Kiểu phòng</FormLabel>
                             <Select onValueChange={(value) => field.onChange(parseInt(value))}>
                                 <FormControl>
                                     <SelectTrigger>
-                                        <SelectValue placeholder='Select room type' />
+                                        <SelectValue placeholder='Chọn kiểu phòng' />
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
@@ -184,11 +184,11 @@ export default function CreateRoomForm() {
                     name='maViTri'
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Location</FormLabel>
+                            <FormLabel>Vị trí</FormLabel>
                             <Select onValueChange={(value) => field.onChange(parseInt(value))}>
                                 <FormControl>
                                     <SelectTrigger>
-                                        <SelectValue placeholder='Select location' />
+                                        <SelectValue placeholder='Chọn vị trí' />
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
@@ -204,7 +204,7 @@ export default function CreateRoomForm() {
                     )}
                 />
                 <Button type='submit' disabled={isLoading}>
-                    {isLoading ? 'Creating...' : 'Create Room'}
+                    {isLoading ? 'Creating...' : 'Tạo phòng'}
                 </Button>
             </form>
         </Form>

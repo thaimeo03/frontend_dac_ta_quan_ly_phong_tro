@@ -5,11 +5,11 @@ export default function Home() {
         <main className='h-screen grid place-items-center'>
             <div className='flex space-x-4'>
                 <Link href='/room-management' className='px-4 py-2 bg-primary text-white rounded-md hover:opacity-90'>
-                    Create Room
+                    Tạo phòng
                 </Link>
 
                 <Link href='/order' className='px-4 py-2 bg-emerald-600 text-white rounded-md hover:opacity-90'>
-                    Create Order
+                    Tạo đơn
                 </Link>
             </div>
         </main>

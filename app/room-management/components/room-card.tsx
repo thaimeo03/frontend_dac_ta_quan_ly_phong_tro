@@ -13,19 +13,19 @@ export default function RoomCard({ room }: RoomCardProps) {
             </CardHeader>
             <CardContent>
                 <p>
-                    <strong>Room ID:</strong> {room.MaPhong}
+                    <strong>Mã phòng:</strong> {room.MaPhong}
                 </p>
                 <p>
-                    <strong>Max Occupancy:</strong> {room.SoNguoiToiDa}
+                    <strong>Số người tối đa:</strong> {room.SoNguoiToiDa}
                 </p>
                 <p>
-                    <strong>Area:</strong> {room.DienTich} m²
+                    <strong>Diện tích:</strong> {room.DienTich} m²
                 </p>
                 <p>
-                    <strong>Floor:</strong> {room.SoTang}
+                    <strong>Số Tầng:</strong> {room.SoTang}
                 </p>
                 <p>
-                    <strong>Description:</strong> {room.MoTa}
+                    <strong>Mô tả:</strong> {room.MoTa}
                 </p>
             </CardContent>
         </Card>
